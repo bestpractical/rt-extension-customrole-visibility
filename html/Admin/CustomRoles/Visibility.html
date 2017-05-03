@@ -5,6 +5,18 @@
 <form action="Visibility.html" method="post" name="Visibility">
 <input type="hidden" class="hidden" name="id" value="<% $id %>" />
 
+<h2><&|/l, $role->Name &>Visibility for [_1]</&></h2>
+<table cellspacing=10>
+% for (@pages) {
+%     my ($label, $url) = @$_;
+    <tr>
+        <td align="left"><% $label %></td>
+        <td><label><input type="radio" class="radio" name="hide-<% $url %>" value="0" <% !$hidden{$url} ? qq[checked="checked"] : qq[] |n %>> <&|/l&>show</&></label></td>
+        <td><label><input type="radio" class="radio" name="hide-<% $url %>" value="1" <%  $hidden{$url} ? qq[checked="checked"] : qq[] |n %>> <&|/l&>hide</&></label></td>
+    </tr>
+% }
+</table>
+
 <& /Elements/Submit, Name => 'Update' &>
 
 </form>
@@ -22,16 +34,45 @@ if ($role->Disabled) {
     Abort(loc("Cannot modify objects of disabled custom role #[_1]", $id));
 }
 
+my %hidden = %{ $role->HiddenForURLs };
+
 if ( $Update ) {
     my (@results);
 
-    # ...
+    for my $key (%ARGS) {
+        if (my ($url) = $key =~ /^hide-(.*)$/) {
+            $hidden{$url} = $ARGS{$key};
+        }
+    }
+
+    my ($ok, $msg) = $role->SetHiddenForURLs(\%hidden);
+    if ($ok) {
+        push @results, loc('Updated visibility');
+    }
+    else {
+        push @results, loc('Unable to update visibility: [_1]', $msg);
+        %hidden = $role->HiddenForURLs;
+    }
 
     MaybeRedirectForResults(
         Actions   => \@results,
         Arguments => {
             id   => $id,
         },
+    );
+}
+
+my @pages = (
+    [loc('Ticket create') => '/Ticket/Create.html'],
+    [loc('Ticket display') => '/Ticket/Display.html'],
+    [loc('Ticket modify people') => '/Ticket/ModifyPeople.html'],
+    [loc('Ticket jumbo') => '/Ticket/ModifyAll.html'],
+);
+
+if ($role->SingleValue) {
+    push @pages, (
+        [loc('Ticket modify basics') => '/Ticket/Modify.html'],
+        [loc('Ticket reply/comment') => '/Ticket/Update.html'],
     );
 }
 

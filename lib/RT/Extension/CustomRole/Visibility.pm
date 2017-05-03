@@ -4,6 +4,59 @@ use warnings;
 
 our $VERSION = '0.01';
 
+sub _CurrentURL {
+    my $url = $HTML::Mason::Commands::r->path_info;
+    $url =~ s!/{2,}!/!g;
+    return $url;
+}
+
+{
+    package RT::CustomRole;
+
+    my $AttributeName = 'HiddenForURLs';
+
+    sub HiddenForURLs {
+        my $self = shift;
+        my $attr = $self->FirstAttribute($AttributeName);
+        return {} if !$attr;
+        return $attr->Content;
+    }
+
+    sub SetHiddenForURLs {
+        my $self = shift;
+        my $hidden = shift;
+
+        return $self->SetAttribute(
+            Name    => $AttributeName,
+            Content => $hidden,
+        );
+    }
+
+    sub IsHiddenForURL {
+        my $self = shift;
+        my $url = shift || RT::Extension::CustomRole::Visibility::_CurrentURL();
+        return $self->HiddenForURLs->{$url};
+    }
+}
+
+{
+    package RT::Queue;
+
+    sub HiddenCustomRoleIDsForURL {
+        my $self = shift;
+        my $url = shift;
+
+        my $roles = $self->CustomRoles;
+        my @ids;
+
+        while (my $role = $roles->Next) {
+            push @ids, $role->Id if $role->IsHiddenForURL($url);
+        }
+
+        return @ids;
+    }
+}
+
 =head1 NAME
 
 RT-Extension-CustomRole-Visibility - manage custom role visibility

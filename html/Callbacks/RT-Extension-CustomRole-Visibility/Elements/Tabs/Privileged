@@ -1,0 +1,13 @@
+<%ARGS>
+$Path
+</%ARGS>
+<%INIT>
+if ($Path =~ m{^/Admin/CustomRoles/}) {
+    my $role = RT::CustomRole->new( $session{CurrentUser} );
+    $role->Load($DECODED_ARGS->{id}) if $DECODED_ARGS->{id};
+
+    if ($role->id and $session{CurrentUser}->HasRight(Object => $role, Right => 'AdminCustomRoles')) {
+        PageMenu()->child("visibility", title => loc("Visibility"), path => "/Admin/CustomRoles/Visibility.html?id=" . $role->Id);
+    }
+}
+</%INIT>

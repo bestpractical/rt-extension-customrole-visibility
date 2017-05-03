@@ -1,0 +1,39 @@
+<& /Admin/Elements/Header, Title => $title &>
+<& /Elements/Tabs &>
+<& /Elements/ListActions &>
+
+<form action="Visibility.html" method="post" name="Visibility">
+<input type="hidden" class="hidden" name="id" value="<% $id %>" />
+
+<& /Elements/Submit, Name => 'Update' &>
+
+</form>
+
+<%ARGS>
+$id     => undef
+$Update => 0
+</%ARGS>
+<%INIT>
+my $role = RT::CustomRole->new( $session{'CurrentUser'} );
+$role->Load($id) or Abort(loc("Could not load custom role #[_1]", $id));
+$id = $role->id;
+
+if ($role->Disabled) {
+    Abort(loc("Cannot modify objects of disabled custom role #[_1]", $id));
+}
+
+if ( $Update ) {
+    my (@results);
+
+    # ...
+
+    MaybeRedirectForResults(
+        Actions   => \@results,
+        Arguments => {
+            id   => $id,
+        },
+    );
+}
+
+my $title = loc('Modify visibility for [_1]', $role->Name);
+</%INIT>

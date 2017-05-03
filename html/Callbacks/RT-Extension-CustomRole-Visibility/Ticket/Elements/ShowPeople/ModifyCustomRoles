@@ -1,0 +1,10 @@
+<%ARGS>
+$Ticket
+$CustomRoles
+</%ARGS>
+<%INIT>
+my $Queue = $Ticket->QueueObj;
+
+my @hidden = $Queue->HiddenCustomRoleIDsForURL;
+$CustomRoles->Limit(FIELD => 'id', OPERATOR => 'NOT IN', VALUE => \@hidden) if @hidden;
+</%INIT>

@@ -1,0 +1,11 @@
+<%ARGS>
+$ARGSRef
+$CustomRoles
+</%ARGS>
+<%INIT>
+my $Queue = RT::Queue->new($session{'CurrentUser'});
+$Queue->Load($ARGSRef->{Queue});
+
+my @hidden = $Queue->HiddenCustomRoleIDsForURL;
+$CustomRoles->Limit(FIELD => 'id', OPERATOR => 'NOT IN', VALUE => \@hidden) if @hidden;
+</%INIT>

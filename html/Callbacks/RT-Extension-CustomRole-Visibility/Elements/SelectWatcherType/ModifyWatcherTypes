@@ -1,0 +1,16 @@
+<%ARGS>
+$Types
+$Queue
+</%ARGS>
+<%INIT>
+my @NewTypes;
+for my $name (@$Types) {
+    if (my ($id) = $name =~ /^RT::CustomRole-(\d+)$/) {
+        my $role = RT::CustomRole->new($session{CurrentUser});
+        $role->Load($id);
+        next if $role->IsHiddenForURL;
+    }
+    push @NewTypes, $name;
+}
+@$Types = @NewTypes;
+</%INIT>

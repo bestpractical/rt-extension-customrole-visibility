@@ -1,0 +1,76 @@
+diff --git a/share/html/Elements/SelectWatcherType b/share/html/Elements/SelectWatcherType
+index 338fc23..667de6c 100644
+--- a/share/html/Elements/SelectWatcherType
++++ b/share/html/Elements/SelectWatcherType
+@@ -67,6 +67,7 @@ else {
+     @types = $Queue->Roles(Single => 0);
+ }
+ 
++$m->callback( Types => \@types, %ARGS, CallbackName => 'ModifyWatcherTypes' );
+ </%INIT>
+ <%ARGS>
+ $AllowNull => 1
+diff --git a/share/html/Ticket/Create.html b/share/html/Ticket/Create.html
+index e396857..fc3bfb6 100644
+--- a/share/html/Ticket/Create.html
++++ b/share/html/Ticket/Create.html
+@@ -186,6 +186,7 @@
+ 
+ % my $roles = $QueueObj->CustomRoles;
+ % $roles->LimitToMultipleValue;
++% $m->callback( CallbackName => 'ModifyCustomRoles', ARGSRef => \%ARGS, CustomRoles => $roles );
+ % while (my $role = $roles->Next) {
+ <tr>
+ <td class="label">
+diff --git a/share/html/Ticket/Elements/EditBasics b/share/html/Ticket/Elements/EditBasics
+index 89d5ffe..4fe3b69 100644
+--- a/share/html/Ticket/Elements/EditBasics
++++ b/share/html/Ticket/Elements/EditBasics
+@@ -140,6 +140,7 @@ my @role_fields;
+ unless ($ExcludeCustomRoles) {
+     my $roles = $QueueObj->CustomRoles;
+     $roles->LimitToSingleValue;
++    $m->callback( CallbackName => 'ModifyCustomRoles', %ARGS, CustomRoles => $roles);
+     while (my $role = $roles->Next) {
+         push @role_fields, {
+             name => $role->Name,
+diff --git a/share/html/Ticket/Elements/EditPeople b/share/html/Ticket/Elements/EditPeople
+index 4d2adc5..c4f41d1 100644
+--- a/share/html/Ticket/Elements/EditPeople
++++ b/share/html/Ticket/Elements/EditPeople
+@@ -74,6 +74,7 @@
+ % my @role_fields;
+ % my $single_roles = $Ticket->QueueObj->CustomRoles;
+ % $single_roles->LimitToSingleValue;
++% $m->callback( CustomRoles => $single_roles, SingleRoles => 1, Ticket => $Ticket, %ARGS, CallbackName => 'ModifyCustomRoles' );
+ % while (my $role = $single_roles->Next) {
+ <tr>
+   <td class="label"><% $role->Name %>:</td>
+@@ -106,6 +107,7 @@
+ 
+ % my $multi_roles = $Ticket->QueueObj->CustomRoles;
+ % $multi_roles->LimitToMultipleValue;
++% $m->callback( CustomRoles => $multi_roles, SingleRoles => 0, Ticket => $Ticket, %ARGS, CallbackName => 'ModifyCustomRoles' );
+ % while (my $role = $multi_roles->Next) {
+ % my $group = $Ticket->RoleGroup($role->GroupType);
+ <tr>
+diff --git a/share/html/Ticket/Elements/ShowPeople b/share/html/Ticket/Elements/ShowPeople
+index f31e907..64ff7ae 100644
+--- a/share/html/Ticket/Elements/ShowPeople
++++ b/share/html/Ticket/Elements/ShowPeople
+@@ -57,6 +57,7 @@
+ 
+ % my $single_roles = $Ticket->QueueObj->CustomRoles;
+ % $single_roles->LimitToSingleValue;
++% $m->callback( CustomRoles => $single_roles, SingleRoles => 1, Ticket => $Ticket, %ARGS, CallbackName => 'ModifyCustomRoles' );
+ % while (my $role = $single_roles->Next) {
+ %     my $group = $Ticket->RoleGroup($role->GroupType);
+ %     my $users = $group->UserMembersObj( Recursively => 0 );
+@@ -86,6 +87,7 @@
+ 
+ % my $multi_roles = $Ticket->QueueObj->CustomRoles;
+ % $multi_roles->LimitToMultipleValue;
++% $m->callback( CustomRoles => $multi_roles, SingleRoles => 0, Ticket => $Ticket, %ARGS, CallbackName => 'ModifyCustomRoles' );
+ % while (my $role = $multi_roles->Next) {
+   <tr>
+     <td class="labeltop"><% $role->Name %>:</td>

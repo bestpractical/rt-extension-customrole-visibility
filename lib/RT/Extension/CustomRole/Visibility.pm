@@ -81,6 +81,16 @@ Add this line:
 
     Plugin( "RT::Extension::CustomRole::Visibility" );
 
+=item Apply patch to your RT
+
+Apply patches to RT. Use the patches that match your version of RT.
+
+    patch -p1 -d /opt/rt4 < patches/rt-4.4.0.patch
+
+or
+
+    patch -p1 -d /opt/rt4 < patches/rt-4.4.1.patch
+
 =item Clear your mason cache
 
     rm -rf /opt/rt4/var/mason_data/obj

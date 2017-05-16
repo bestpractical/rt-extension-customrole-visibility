@@ -1,3 +1,10 @@
+html/Admin/CustomRoles/Visibility.html
+html/Callbacks/RT-Extension-CustomRole-Visibility/Elements/SelectWatcherType/ModifyWatcherTypes
+html/Callbacks/RT-Extension-CustomRole-Visibility/Elements/Tabs/Privileged
+html/Callbacks/RT-Extension-CustomRole-Visibility/Ticket/Create.html/ModifyCustomRoles
+html/Callbacks/RT-Extension-CustomRole-Visibility/Ticket/Elements/EditBasics/ModifyCustomRoles
+html/Callbacks/RT-Extension-CustomRole-Visibility/Ticket/Elements/EditPeople/ModifyCustomRoles
+html/Callbacks/RT-Extension-CustomRole-Visibility/Ticket/Elements/ShowPeople/ModifyCustomRoles
 inc/Module/Install.pm
 inc/Module/Install/Base.pm
 inc/Module/Install/Can.pm
@@ -15,4 +22,6 @@ lib/RT/Extension/CustomRole/Visibility.pm
 Makefile.PL
 MANIFEST			This list of files
 META.yml
+patches/rt-4.4.0.patch
+patches/rt-4.4.1.patch
 README

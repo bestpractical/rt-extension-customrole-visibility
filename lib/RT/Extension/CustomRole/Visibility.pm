@@ -99,7 +99,7 @@ or
 
 =item Configure custom role visibility
 
-Visit Admin -> Custom Roles -> Select -> (queue) -> Visibility to
+Visit Admin -> Custom Roles -> Select -> (custom role) -> Visibility to
 configure the visibility for a custom role.
 
 =back
